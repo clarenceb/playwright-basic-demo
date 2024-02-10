@@ -274,6 +274,9 @@ test.describe('Counter', () => {
     await expect(todoCount).toContainText('2');
 
     await checkNumberOfTodosInLocalStorage(page, 2);
+
+    // Visual comparison of screenshot
+    await expect(page).toHaveScreenshot();
   });
 });
 
