@@ -300,7 +300,7 @@ Line 64: `await expect(todoCount).toHaveText(/2/);`
 Line 145: `await expect(firstTodo).toHaveClass('complete');`
 Line 146: `await expect(secondTodo).toHaveClass('complete');`
 
-* Also, change the PLAYWRIGHT_SERVICE_OS in GitHub Actions to "windows" and save before committing and pushing the changes to the repository
+* Also, change the `PLAYWRIGHT_SERVICE_OS` in GitHub Actions to `windows` and save before committing and pushing the changes to the repository
 
 **Fix the failing test and view report**
 
