@@ -1,8 +1,10 @@
-# Basic Demo
+# Playwright Basic Demo
 
-## Setup/Prerequisites
+A basic demo of Playwright Framework and Microsoft Playwright Testing.
 
-Install dependencies:
+## Setup/Prerequisites - Playwright Framework
+
+Install dependencies for Playwright Framework on your local machine:
 
 ```sh
 npm install -D @playwright/test
@@ -10,7 +12,7 @@ npx playwright install
 npx playwright install-deps
 ```
 
-First time setup of a new project:
+First time setup of a new project (not needed for this project as it has already been setup):
 
 ```sh
 mkdir playwright-basic-demo
@@ -20,13 +22,13 @@ npm init playwright@latest
 cp basic-demo/tests-examples/demo-todo-app.spec.ts tests
 ```
 
-If cloning an existing configured project:
+After cloning this project from GitHub, install the npm packages:
 
 ```sh
 npm install
 ```
 
-### For demonstrating the Playwright Testing Service
+### Setup/Prerequisites - Playwright Testing Service
 
 * Setup a Playwright Testing workspace
 
@@ -42,7 +44,7 @@ npm install
 
 ## Demo Script
 
-### Check the Playwright docs
+### Quick walkthrough of the Playwright Framework docs
 
 * [Playwright Docs - Getting Started / Installation](https://playwright.dev/docs/intro)
 
@@ -69,7 +71,7 @@ npx playwright test demo-todo-app.spec.ts --workers=1 --project=firefox --headed
 npx playwright show-report
 ```
 
-### Run tests on Playwright Testing service
+### Run tests using the Playwright Testing service
 
 Navigate to Playwright Testing in the Azure Portal:
 
@@ -82,7 +84,7 @@ Run parallel tests across multiple remote browsers:
 npx playwright test demo-todo-app.spec.ts --workers=50 --config=playwright.service.config.ts
 ```
 
-### Interactive mode
+### Interactive Mode
 
 ```sh
 npx playwright test demo-todo-app.spec.ts --project=firefox --ui
@@ -127,7 +129,7 @@ test('test', async ({ page }) => {
 
 Select the code and choose Copilot / Start Inline Chat:
 
-"refactor to reduce repetition"
+  "refactor to reduce repetition"
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -151,7 +153,7 @@ test('test', async ({ page }) => {
 
 Select the inner test the code, start a Copilot inline chat:
 
-"Add a Page Object Model to represent this page."
+  "Add a Page Object Model to represent this page."
 
 ```ts
 import { test, expect, Page } from '@playwright/test';
@@ -195,7 +197,7 @@ test('test', async ({ page }) => {
 
 Select all the code in the file:
 
-"Refactor getTodoCount to just take in an integer and check the item count in the method."
+  "Refactor getTodoCount to just take in an integer and check the item count in the method."
 
 ```ts
 import { test, expect, Page } from '@playwright/test';
@@ -241,28 +243,36 @@ test('test', async ({ page }) => {
 
 ### Visual Comparisons
 
-When running locally, visual comparisons are ignored:
+When running locally, visual comparisons are ignored (as set in the `playwright.config.ts` file):
 
 ```sh
 npx playwright test demo-todo-app.spec.ts:259 --workers=20 --project=firefox --headed
 ```
 
-When running on the Playwright Testing service, visual comparisons are enabled:
+When running on the Playwright Testing service, visual comparisons are enabled (as set in the `playwright.service.config.ts` file)::
 
 ```sh
 npx playwright test demo-todo-app.spec.ts:259 --config=playwright.service.config.ts --project=firefox --update-snapshots
 
-# Will fail as it's a different browser (could also use Windows instead of Linux)
+# This will fail as it's a different browser and it has a different rendering engine (can also use Windows instead of Linux)
 npx playwright test demo-todo-app.spec.ts:259 --config=playwright.service.config.ts --project=chromium
 ```
 
 ### Run tests on CI (GitHub Actions)
 
-Include the Test Report and Tracing as a build artifact:
+**Setup: one-off setup for the workflow**
 
-```sh
+* [Generate an access token](https://learn.microsoft.com/en-us/azure/playwright-testing/quickstart-automate-end-to-end-testing?tabs=github#configure-a-service-access-token) in the Playwright Testing workspace
+* Store the access token in a GitHub repository secret with the name `PLAYWRIGHT_SERVICE_ACCESS_TOKEN`
+* Fetch the Playwright Service URL for your workspace
+* Store the Playwright Service URL in a GitHub repository variable with the name `PLAYWRIGHT_SERVICE_URL`
+* Check that `playwright.service.config.ts` is committed to the repository, check the [sample one](https://learn.microsoft.com/en-us/azure/playwright-testing/quickstart-automate-end-to-end-testing?tabs=github#update-the-workflow-definition) in the docs or download it from your Playwright Testing workspace under the section "Add Playwright Service Configuration"
+* Update the GitHub Actions workflow file to run the tests on CI based on [this sample](https://learn.microsoft.com/en-us/azure/playwright-testing/quickstart-automate-end-to-end-testing?tabs=github#update-the-workflow-definition)
 
-```
+**Enable workflow: one-off setup for the workflow**
+
+* Ensure the workflow **Playwright Tests** is enabled in the GitHub Actions tab of the repository
+* Make any necessary changes to the workflow file (`.github/workflows/playwright.yml) and commit them to the repository
 
 ## Resources
 
