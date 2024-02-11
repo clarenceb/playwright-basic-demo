@@ -21,7 +21,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: |
-          tests/__screenshots__/
+          /home/runner/work/playwright-basic-demo/playwright-basic-demo/tests/__screenshots__/
         key: manual-update-snapshots
 
     - name: Cache playwright browsers
@@ -43,8 +43,8 @@ jobs:
         PLAYWRIGHT_SERVICE_ACCESS_TOKEN: ${{ secrets.PLAYWRIGHT_SERVICE_ACCESS_TOKEN }}
         PLAYWRIGHT_SERVICE_URL: ${{ secrets.PLAYWRIGHT_SERVICE_URL }}
         PLAYWRIGHT_SERVICE_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}-${{ github.sha }}
-      # run: npx playwright test demo-todo-app.spec.ts -c playwright.service.config.ts --workers=20 --update-snapshots
-      run: npx playwright test demo-todo-app.spec.ts -c playwright.service.config.ts --workers=20
+      run: npx playwright test demo-todo-app.spec.ts -c playwright.service.config.ts --workers=20 --update-snapshots
+      # run: npx playwright test demo-todo-app.spec.ts -c playwright.service.config.ts --workers=20
 
     - name: Upload Playwright report
       uses: actions/upload-artifact@v4
