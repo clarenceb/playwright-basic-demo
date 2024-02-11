@@ -292,7 +292,7 @@ npx playwright show-report playwright-report
 
 Navigate to the URL ([http://localhost:9323](http://localhost:9323)) in a browser to view the report
 
-**Commit a failing tests and view report**
+**Commit a failing tests and view report with traces**
 
 * In the file `demo-todo-app.spec.ts`, change these tests to fail:
 
@@ -301,6 +301,9 @@ Line 145: `await expect(firstTodo).toHaveClass('complete');`
 Line 146: `await expect(secondTodo).toHaveClass('complete');`
 
 * Also, change the `PLAYWRIGHT_SERVICE_OS` in GitHub Actions to `windows` and save before committing and pushing the changes to the repository
+* Commit and push the changes to the repository - the tests should fail
+* Download the `playright-report` artifact from the workflow run
+* View only failing tests and traces in the report
 
 **Fix the failing test and view report**
 

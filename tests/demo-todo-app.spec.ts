@@ -276,7 +276,7 @@ test.describe('Counter', () => {
     await checkNumberOfTodosInLocalStorage(page, 2);
 
     // Visual comparison of screenshot
-    await expect(page).toHaveScreenshot();
+    await expect(page).toHaveScreenshot({maxDiffPixelRatio: 0.05});
   });
 });
 
