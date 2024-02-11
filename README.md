@@ -304,7 +304,9 @@ Line 146: `await expect(secondTodo).toHaveClass('complete');`
 
 **Fix the failing test and view report**
 
-
+Revert the changes made above.
+The tests should pass.
+Show the caches for the workflow as well to save time on subsequent runs.
 
 ## Resources
 

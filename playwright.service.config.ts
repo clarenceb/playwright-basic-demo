@@ -39,7 +39,8 @@ export default defineConfig(config, {
   ignoreSnapshots: false,
 
   // This is an alternative path where you keep screenshots in a separate directory, one per service OS.
-  snapshotPathTemplate: `{testDir}/__screenshots__/{testFilePath}/${os}/{arg}{ext}`,
+  // snapshotPathTemplate: `{testDir}/__screenshots__/{testFilePath}/${os}/{arg}{ext}`,
+  snapshotPathTemplate: `{testDir}/__screenshots__/{testFilePath}/{arg}{ext}`,
 
   // See https://playwright.dev/docs/api/class-testproject#test-project-snapshot-path-template
   // snapshotPathTemplate: `{testDir}/__screenshots__/{testFilePath}/${os}/{projectName}/{arg}{ext}`,
