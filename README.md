@@ -265,7 +265,7 @@ npx playwright test demo-todo-app.spec.ts:259 --config=playwright.service.config
 * [Generate an access token](https://learn.microsoft.com/en-us/azure/playwright-testing/quickstart-automate-end-to-end-testing?tabs=github#configure-a-service-access-token) in the Playwright Testing workspace
 * Store the access token in a GitHub repository secret with the name `PLAYWRIGHT_SERVICE_ACCESS_TOKEN`
 * Fetch the Playwright Service URL for your workspace
-* Store the Playwright Service URL in a GitHub repository variable with the name `PLAYWRIGHT_SERVICE_URL`
+* Store the Playwright Service URL in a GitHub repository secret with the name `PLAYWRIGHT_SERVICE_URL`
 * Check that `playwright.service.config.ts` is committed to the repository, check the [sample one](https://learn.microsoft.com/en-us/azure/playwright-testing/quickstart-automate-end-to-end-testing?tabs=github#update-the-workflow-definition) in the docs or download it from your Playwright Testing workspace under the section "Add Playwright Service Configuration"
 * Update the GitHub Actions workflow file to run the tests on CI based on [this sample](https://learn.microsoft.com/en-us/azure/playwright-testing/quickstart-automate-end-to-end-testing?tabs=github#update-the-workflow-definition)
 
@@ -273,6 +273,27 @@ npx playwright test demo-todo-app.spec.ts:259 --config=playwright.service.config
 
 * Ensure the workflow **Playwright Tests** is enabled in the GitHub Actions tab of the repository
 * Make any necessary changes to the workflow file (`.github/workflows/playwright.yml) and commit them to the repository
+
+**View the playwright report and traces**
+
+* Navigate to the workflow run or the "acceptance-tests" job
+* In the **Artifacts** section, download the report and traces contained in the `playwright-report` aritfact ZIP file
+* Unzip the directory `playwright-report`
+* From the command-line, run the playwright report viewer:
+
+```sh
+cd ~/Downloads/
+unzip playwright-report.zip
+
+npx playwright show-report playwright-report
+# Serving HTML report at http://localhost:9323. Press Ctrl+C to quit.
+```
+
+Navigate to the URL ([http://localhost:9323](http://localhost:9323)) in a browser to view the report
+
+**Commit a failing tests and view report**
+
+**Fix the failing test and view report**
 
 ## Resources
 
