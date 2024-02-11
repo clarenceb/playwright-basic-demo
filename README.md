@@ -283,7 +283,8 @@ npx playwright test demo-todo-app.spec.ts:259 --config=playwright.service.config
 
 ```sh
 cd ~/Downloads/
-unzip playwright-report.zip
+rm -rf ./playwright-report*
+unzip playwright-report.zip -d playwright-report
 
 npx playwright show-report playwright-report
 # Serving HTML report at http://localhost:9323. Press Ctrl+C to quit.
