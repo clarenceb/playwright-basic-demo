@@ -61,7 +61,7 @@ test.describe('New Todo', () => {
     await expect(page.getByText('3 items left')).toBeVisible();
     await expect(todoCount).toHaveText('3 items left');
     await expect(todoCount).toContainText('3');
-    await expect(todoCount).toHaveText(/3/);
+    await expect(todoCount).toHaveText(/2/);
 
     // Check all items in one call.
     await expect(page.getByTestId('todo-title')).toHaveText(TODO_ITEMS);
@@ -142,8 +142,8 @@ test.describe('Item', () => {
     await secondTodo.getByRole('checkbox').check();
 
     // Assert completed class.
-    await expect(firstTodo).toHaveClass('completed');
-    await expect(secondTodo).toHaveClass('completed');
+    await expect(firstTodo).toHaveClass('complete');
+    await expect(secondTodo).toHaveClass('complete');
   });
 
   test('should allow me to un-mark items as complete', async ({ page }) => {

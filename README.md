@@ -294,7 +294,17 @@ Navigate to the URL ([http://localhost:9323](http://localhost:9323)) in a browse
 
 **Commit a failing tests and view report**
 
+* In the file `demo-todo-app.spec.ts`, change these tests to fail:
+
+Line 64: `await expect(todoCount).toHaveText(/2/);`
+Line 145: `await expect(firstTodo).toHaveClass('complete');`
+Line 146: `await expect(secondTodo).toHaveClass('complete');`
+
+* Also, change the PLAYWRIGHT_SERVICE_OS in GitHub Actions to "windows" and save before committing and pushing the changes to the repository
+
 **Fix the failing test and view report**
+
+
 
 ## Resources
 
