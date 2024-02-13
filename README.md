@@ -66,10 +66,23 @@ Examine a more detailed test file: `demo-todo-app.spec.ts`
 Run tests:
 
 ```sh
-npx playwright test demo-todo-app.spec.ts --workers=5
-npx playwright test demo-todo-app.spec.ts --workers=1 --project=firefox --headed
+npx playwright test demo-todo-app.spec.ts --workers=5 --project=webkit
+npx playwright test demo-todo-app.spec.ts --workers=1 --project=webkit --headed
 npx playwright show-report
 ```
+
+### Interactive Mode
+
+```sh
+npx playwright test demo-todo-app.spec.ts --project=webkit --ui
+```
+
+* Run the tests
+* Examine the timeline
+* Examine the test the test cases and individual steps
+* Use the **Locator** to find selectors
+* Use watch mode on a single test
+* Create a failing test and debug it
 
 ### Run tests using the Playwright Testing service
 
@@ -84,19 +97,6 @@ Run parallel tests across multiple remote browsers:
 npx playwright test demo-todo-app.spec.ts --workers=50 --config=playwright.service.config.ts
 ```
 
-### Interactive Mode
-
-```sh
-npx playwright test demo-todo-app.spec.ts --project=firefox --ui
-```
-
-* Run the tests
-* Examine the timeline
-* Examine the test the test cases and individual steps
-* Use the Locator to find selectors
-* Use watch mode on a single test
-* Create a failing test and debug it
-
 ### VSCode Integration / GitHub Copilot
 
 Test Explorer:
@@ -104,7 +104,7 @@ Test Explorer:
 * Show Test Explorer (click Testing icon in the Activity Bar)
 * Run tests from Test Explorer
 * Show Browser
-* Show Trace Viewer (doesn't work from WSL2, open in Windows instead)
+* Show Trace Viewer (from WSL2, change browser URL address from `0.0.0.0` to `localhost`)
   * Make a test fail, suggest using Counter or Item Marked Completed
   * Show in the tracer viewer: Action / Before / After
 * Pick Locator
@@ -172,7 +172,7 @@ class TodoPage {
     await inputField.press('Enter');
   }
 
-  async getTodoCount() {
+  async getTodoItemCount() {
     const todoCount = await this.page.getByTestId('todo-count');
     return await todoCount.textContent();
   }
@@ -188,25 +188,29 @@ test('test', async ({ page }) => {
   await todoPage.navigateTo();
 
   await todoPage.addTodoItem('Buy milk');
-  await expect(await todoPage.getTodoCount()).toContain('1 item');
+  await expect(await todoPage.getTodoItemCount()).toContain('1 item');
 
   await todoPage.addTodoItem('Buy bread');
-  await expect(await todoPage.getTodoCount()).toContain('2 items');
+  await expect(await todoPage.getTodoItemCount()).toContain('2 items');
 });
 ```
 
 Select all the code in the file:
 
-  "Refactor getTodoCount to just take in an integer and check the item count in the method."
+  "Refactor getTodoCount to take an integer which is the todo count.  Assert the todo count matches the passed in value."
 
 ```ts
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 class TodoPage {
-  private page: Page;
+  private page: any;
 
-  constructor(page: Page) {
+  constructor(page: any) {
     this.page = page;
+  }
+
+  async navigateTo() {
+    await this.page.goto('https://demo.playwright.dev/todomvc/#/');
   }
 
   async addTodoItem(item: string) {
@@ -216,28 +220,30 @@ class TodoPage {
     await inputField.press('Enter');
   }
 
-  async getTodoCount(expectedCount: number) {
-    const todoCount = await this.page.getByTestId('todo-count');
-    const countText = await todoCount.textContent();
-    const count = parseInt(countText.split(' ')[0]);
-    expect(count).toBe(expectedCount);
+  async markAllAsComplete() {
+    await this.page.getByText('Mark all as complete').click();
   }
 
-  async navigateTo() {
-    await this.page.goto('https://demo.playwright.dev/todomvc/#/');
+  async assertTodoItemCount(count: number) {
+    const bodyLocator = await this.page.getByTestId('todo-count');
+    const bodyText = await bodyLocator.textContent();
+    const itemCount = parseInt(bodyText.split(' ')[0]);
+    expect(itemCount).toBe(count);
   }
 }
 
 test('test', async ({ page }) => {
   const todoPage = new TodoPage(page);
-
   await todoPage.navigateTo();
 
-  await todoPage.addTodoItem('Buy milk');
-  await todoPage.getTodoCount(1);
+  await todoPage.addTodoItem('Buy Milk');
+  await todoPage.assertTodoItemCount(1);
 
-  await todoPage.addTodoItem('Buy bread');
-  await todoPage.getTodoCount(2);
+  await todoPage.addTodoItem('Buy Bread');
+  await todoPage.assertTodoItemCount(2);
+
+  await todoPage.markAllAsComplete();
+  await todoPage.assertTodoItemCount(0);
 });
 ```
 
