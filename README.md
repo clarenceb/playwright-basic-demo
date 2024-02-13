@@ -57,7 +57,9 @@ Examine a basic test file: `basic-demo\tests\example.spec.ts`
 Run tests:
 
 ```sh
+# Run specific test file with 3 workers, using all profiles (chromium, firefox, webkit)
 npx playwright test example.spec.ts --workers=3
+
 npx playwright show-report
 ```
 
@@ -66,8 +68,12 @@ Examine a more detailed test file: `demo-todo-app.spec.ts`
 Run tests:
 
 ```sh
-npx playwright test demo-todo-app.spec.ts --workers=5 --project=webkit
-npx playwright test demo-todo-app.spec.ts --workers=1 --project=webkit --headed
+# Run specific test file with 5 workers, using the chromium profile
+npx playwright test demo-todo-app.spec.ts --workers=5 --project=chromium
+
+# Run specific test file with 1 worker, using the chromium profile and headed mode
+npx playwright test demo-todo-app.spec.ts:72 --workers=1 --project=chromium --headed
+
 npx playwright show-report
 ```
 
@@ -94,22 +100,54 @@ Navigate to Playwright Testing in the Azure Portal:
 Run parallel tests across multiple remote browsers:
 
 ```sh
+# Run specific test file with 50 workers, all profiles,
+# using the Playwright service configuration
 npx playwright test demo-todo-app.spec.ts --workers=50 --config=playwright.service.config.ts
+
+# ==> Running 72 tests using 50 workers
 ```
+
+### Interactive Mode (using Playwright Inspector)
+
+```sh
+npx playwright test demo-todo-app.spec.ts --project=chromium --ui
+```
+
+* Run the tests
+* Examine the timeline
+* Examine the test cases and individual steps
+* Use the Locator to find selectors
+* Use watch mode on a single test
+* Create a failing test and debug/fix it
 
 ### VSCode Integration / GitHub Copilot
 
 Test Explorer:
 
-* Show Test Explorer (click Testing icon in the Activity Bar)
-* Run tests from Test Explorer
-* Show Browser
+* Show Test Explorer (click "Testing" icon in the Activity Bar or select "View" / "Testing" from the menu)
+* Click "Show Browser"
+* Run the "demo-todo-app.spec.ts" test file from Test Explorer
 * Show Trace Viewer (from WSL2, change browser URL address from `0.0.0.0` to `localhost`)
   * Make a test fail, suggest using Counter or Item Marked Completed
   * Show in the tracer viewer: Action / Before / After
 * Pick Locator
 
 Record a new test and use Copilot to help write the test:
+
+* Browse to `https://demo.playwright.dev/todomvc/#/`
+* Click "What needs to be done?"
+* Type "Buy milk" and press Enter
+* Click "Assert text" from the testing toolbar
+* Select the item count label
+* Enter "1 item" and click the check mark to accept
+* Click "What needs to be done?"
+* Type "Buy bread" and press Enter
+* Click "Assert text" from the testing toolbar
+* Select the item count label
+* Enter "2 items" and click the check mark to accept
+* End the test recording by clicking the record circle
+
+You should get code similar to the following:
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -252,16 +290,20 @@ test('test', async ({ page }) => {
 When running locally, visual comparisons are ignored (as set in the `playwright.config.ts` file):
 
 ```sh
-npx playwright test demo-todo-app.spec.ts:259 --workers=20 --project=firefox --headed
+npx playwright test demo-todo-app.spec.ts:259 --workers=1 --project=firefox --update-snapshots
+npx playwright test demo-todo-app.spec.ts:259 --workers=1 --project=chromium
 ```
 
 When running on the Playwright Testing service, visual comparisons are enabled (as set in the `playwright.service.config.ts` file)::
 
 ```sh
+# Edit `playwright.config.ts` to enable visual comparisons (ignoreSnapshots: false)
 npx playwright test demo-todo-app.spec.ts:259 --config=playwright.service.config.ts --project=firefox --update-snapshots
 
-# This will fail as it's a different browser and it has a different rendering engine (can also use Windows instead of Linux)
-npx playwright test demo-todo-app.spec.ts:259 --config=playwright.service.config.ts --project=chromium
+# This should fail as it's a different browser and it has a different rendering engine (can also use Windows instead of Linux)
+npx playwright test demo-todo-app.spec.ts:259 --config=playwright.service.config.ts --project=webskit
+
+# Reset `playwright.config.ts` to disable visual comparisons (ignoreSnapshots: true)
 ```
 
 ### Run tests on CI (GitHub Actions)
@@ -278,11 +320,13 @@ npx playwright test demo-todo-app.spec.ts:259 --config=playwright.service.config
 **Enable workflow: one-off setup for the workflow**
 
 * Ensure the workflow **Playwright Tests** is enabled in the GitHub Actions tab of the repository
-* Make any necessary changes to the workflow file (`.github/workflows/playwright.yml) and commit them to the repository
+* Make any necessary changes to the workflow file (`.github/workflows/playwright.yml`) and commit them to the repository
 
 **View the playwright report and traces**
 
-* Navigate to the workflow run or the "acceptance-tests" job
+* Navigate to the **Playwright Tests** workflow run
+* Select the most recent workflow run click the **acceptance-tests** job to see the logs
+* Go back to the **Summary**
 * In the **Artifacts** section, download the report and traces contained in the `playwright-report` aritfact ZIP file
 * Unzip the directory `playwright-report`
 * From the command-line, run the playwright report viewer:
@@ -296,11 +340,11 @@ npx playwright show-report playwright-report
 # Serving HTML report at http://localhost:9323. Press Ctrl+C to quit.
 ```
 
-Navigate to the URL ([http://localhost:9323](http://localhost:9323)) in a browser to view the report
+Navigate to the URL [http://localhost:9323](http://localhost:9323) in your browser to view the report.
 
 **Commit a failing tests and view report with traces**
 
-* In the file `demo-todo-app.spec.ts`, change these tests to fail:
+* Open the file `demo-todo-app.spec.ts`, change these tests to fail:
 
 Line 64: `await expect(todoCount).toHaveText(/2/);`
 Line 145: `await expect(firstTodo).toHaveClass('complete');`
