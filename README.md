@@ -289,7 +289,7 @@ npx playwright test demo-todo-app.spec.ts:259 --config=playwright.service.config
 
 ```sh
 cd ~/Downloads/
-rm -rf ./playwright-report*
+rm -rf ./playwright-report ./playwright-report.zip
 unzip playwright-report.zip -d playwright-report
 
 npx playwright show-report playwright-report
