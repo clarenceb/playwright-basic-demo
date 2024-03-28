@@ -77,6 +77,17 @@ npx playwright test demo-todo-app.spec.ts:72 --workers=1 --project=chromium --he
 npx playwright show-report
 ```
 
+Run API tests:
+
+```powershell
+$env:GITHUB_USER="your_githubuser"
+# Create a PAT token with repo and issues read/write permissions
+$env:API_TOKEN="github_pat_xxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# Uncomment the setup ad/or teardown functions as required (e.g. to create thr github repo and delete it after the tests are run)
+npx playwright test github-api.spec.ts --workers=1
+```
+
 ### Interactive Mode
 
 ```sh
